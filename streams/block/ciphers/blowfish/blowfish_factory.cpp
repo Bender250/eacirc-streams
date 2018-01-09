@@ -7,11 +7,11 @@
 namespace block {
 
 
-    void blowfish_factory::keysetup(const std::uint8_t* key, const std::uint64_t keysize) {
+    void blowfish_factory::keysetup(const std::uint8_t* key, const std::size_t keysize) {
         blowfish_key_setup(key, &_keystruct, keysize, unsigned(_rounds));
     }
 
-    void blowfish_factory::ivsetup(const std::uint8_t* iv, const std::uint64_t ivsize) {
+    void blowfish_factory::ivsetup(const std::uint8_t* iv, const std::size_t ivsize) {
         throw std::runtime_error("not implemented yet");
     }
 

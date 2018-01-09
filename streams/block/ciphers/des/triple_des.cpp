@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 namespace block {
-void triple_des::keysetup(const std::uint8_t* key, const std::uint64_t keysize) {
+void triple_des::keysetup(const std::uint8_t* key, const std::size_t keysize) {
     std::copy_n(key, keysize, _ctx.key);
     if (_ctx.en) {
         three_des_key_setup(_ctx.key, _ctx.schedule, DES_ENCRYPT);
@@ -14,7 +14,7 @@ void triple_des::keysetup(const std::uint8_t* key, const std::uint64_t keysize) 
     }
 }
 
-void triple_des::ivsetup(const std::uint8_t* iv, const std::uint64_t ivsize) {
+void triple_des::ivsetup(const std::uint8_t* iv, const std::size_t ivsize) {
     throw std::runtime_error("not implemented yet");
 }
 

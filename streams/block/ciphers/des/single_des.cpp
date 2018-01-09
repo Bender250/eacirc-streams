@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 namespace block {
-void single_des::keysetup(const std::uint8_t* key, const std::uint64_t keysize) {
+void single_des::keysetup(const std::uint8_t* key, const std::size_t keysize) {
     std::copy_n(key, keysize, _ctx.key);
     if (_ctx.en) {
         des_key_setup(_ctx.key, _ctx.schedule, DES_ENCRYPT);

@@ -32,7 +32,7 @@ namespace testsuite {
         compare_ciphertext(ciphertext_str);
     }
 
-    unsigned long estream_test_case::block_size() const {
+    std::size_t estream_test_case::block_size() const {
         return _plaintext.size();
     }
 

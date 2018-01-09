@@ -15,8 +15,8 @@ struct estream_stream : stream {
 private:
     const estream_init_frequency _initfreq;
     const std::size_t _block_size;
-    constexpr static unsigned default_iv_size = 16;
-    constexpr static unsigned default_key_size = 16;
+    constexpr static std::size_t default_iv_size = 16;
+    constexpr static std::size_t default_key_size = 16;
 
     std::unique_ptr<stream> _iv_stream;
     std::unique_ptr<stream> _key_stream;

@@ -78,7 +78,7 @@ namespace testsuite {
         const json& stream_config() const;
 
         /** Getter for block size **/
-        unsigned long block_size() const;
+        std::size_t block_size() const;
 
         /**
          * Test raw function with current test vector

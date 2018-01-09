@@ -11,7 +11,8 @@ struct sha3_interface;
 
 std::size_t compute_hash_size(const std::size_t hash_size, const std::size_t osize);
 
-template <typename I> void hash_data(sha3_interface& hasher, const I& data, std::uint8_t* hash, const std::size_t hash_size);
+template <typename I>
+void hash_data(sha3_interface& hasher, const I& data, std::uint8_t* hash, const std::size_t hash_size);
 
 
 struct sha3_stream : stream {

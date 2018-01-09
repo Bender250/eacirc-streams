@@ -14,7 +14,7 @@ namespace block {
         blowfish_factory(unsigned int rounds)
             : block_cipher(rounds) {}
 
-        void keysetup(const std::uint8_t* key, const std::uint64_t keysize) override;
+        void keysetup(const std::uint8_t* key, const std::size_t keysize) override;
 
         void ivsetup(const std::uint8_t* iv, const uint64_t ivsize) override;
 

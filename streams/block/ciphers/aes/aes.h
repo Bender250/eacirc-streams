@@ -23,9 +23,9 @@ namespace block {
         aes(std::size_t rounds)
             : block_cipher(rounds) {}
 
-        void keysetup(const std::uint8_t* key, const std::uint64_t keysize) override;
+        void keysetup(const std::uint8_t* key, const std::size_t keysize) override;
 
-        void ivsetup(const std::uint8_t* iv, const std::uint64_t ivsize) override;
+        void ivsetup(const std::uint8_t* iv, const std::size_t ivsize) override;
 
         void encrypt(const std::uint8_t* plaintext,
                      std::uint8_t* ciphertext) override;

@@ -428,7 +428,7 @@ void aes::keysetup(const std::uint8_t* key, const uint64_t keysize) {
     std::copy_n(key, keysize, _ctx.key);
 }
 
-void aes::ivsetup(const std::uint8_t* iv, const std::uint64_t ivsize) {
+void aes::ivsetup(const std::uint8_t* iv, const std::size_t ivsize) {
     throw std::runtime_error("not implemented yet");
 }
 
