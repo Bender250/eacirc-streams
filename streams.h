@@ -150,8 +150,39 @@ struct sac_stream : stream {
         return make_cview(_data);
     }
 
-private:
+protected:
     pcg32 _rng;
+};
+
+/**
+ * @brief Stream for testing strict avalanche criterion
+ *
+ * For keying SAC test.
+ */
+struct sac_step_stream : sac_stream {
+    template <typename Seeder>
+    sac_step_stream(Seeder &&seeder, const size_t osize) : sac_stream(seeder, osize), _step(0) {}
+
+    vec_cview next() override {
+        if (_step == 0) {
+            _step += 1;
+            std::generate_n(_data.data(), osize(), [this]() {
+                return std::uniform_int_distribution<std::uint8_t>()(_rng);
+            });
+
+        } else {
+            _step = 0;
+            std::uniform_int_distribution<std::size_t> dist{0, osize() / 2 * 8};
+            std::size_t pos = dist(_rng) + osize() / 2 * 8;
+            _data[pos / 8] ^= (1 << (pos % 8));
+        }
+
+        return make_cview(_data);
+    }
+
+protected:
+    pcg32 _rng;
+    uint8_t _step;
 };
 
 struct sac_fixed_pos_stream : stream {
