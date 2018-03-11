@@ -172,8 +172,8 @@ struct sac_step_stream : sac_stream {
 
         } else {
             _step = 0;
-            std::uniform_int_distribution<std::size_t> dist{0, osize() / 2 * 8};
-            std::size_t pos = dist(_rng) + osize() / 2 * 8;
+            std::uniform_int_distribution<std::size_t> dist{0, osize() * 8};
+            std::size_t pos = dist(_rng) + osize() * 8;
             _data[pos / 8] ^= (1 << (pos % 8));
         }
 
