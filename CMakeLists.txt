@@ -47,25 +47,24 @@ add_subdirectory(streams/block)
 
 option(BUILD_testsuite "Build all tests." OFF)
 
+# === eacirc generator executable
+add_executable(eacirc-streams main.cc generator)
+
+set_target_properties(eacirc-streams PROPERTIES
+        LINKER_LANGUAGE CXX
+        )
+
+target_link_libraries(eacirc-streams eacirc-core eacirc-streams-lib)
+
+build_stream(eacirc-streams estream)
+build_stream(eacirc-streams sha3)
+build_stream(eacirc-streams block)
+
 ##############
 # Building of testsuite
 ##############
-if (NOT BUILD_testsuite)
 
-    # === eacirc generator executable
-    add_executable(eacirc-streams main.cc generator)
-
-    set_target_properties(eacirc-streams PROPERTIES
-            LINKER_LANGUAGE CXX
-            )
-
-    target_link_libraries(eacirc-streams eacirc-core eacirc-streams-lib)
-
-    build_stream(eacirc-streams estream)
-    build_stream(eacirc-streams sha3)
-    build_stream(eacirc-streams block)
-
-else()
+if (BUILD_testsuite)
     enable_testing()
     include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
