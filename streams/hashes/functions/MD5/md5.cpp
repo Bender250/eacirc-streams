@@ -11,6 +11,7 @@
 
 /*************************** HEADER FILES ***************************/
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 #include "md5.h"
 
