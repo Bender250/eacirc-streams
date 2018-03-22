@@ -179,7 +179,7 @@ namespace hash {
     }
 
     int SHA256::Update(const BitSequence *data, DataLength databitlen) {
-        sha256_update(&(this->m_state), data, databitlen, m_rounds);
+        sha256_update(&(this->m_state), data, databitlen / 8, m_rounds);
         return 0;
     }
 
