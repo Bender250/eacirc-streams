@@ -22,20 +22,19 @@ int MD5::Init(int hashbitlen)
         throw std::out_of_range("MD5 supports only 16B output");
     }
 
-    MD5Init(&m_contetx, m_rounds);
+    md5_init(&m_contetx);
     return SUCCESS;
 }
 
 int MD5::Update(const BitSequence *data, DataLength databitlen)
 {
-    MD5Update(&m_contetx, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen / 8), m_rounds);
+    md5_update(&m_contetx, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen / 8), m_rounds);
     return SUCCESS;
 }
 
 int MD5::Final(BitSequence *hashval)
 {
-    MD5Final(&m_contetx, m_rounds);
-    memcpy((void *) hashval, m_contetx.digest, MD5_DIGEST_LENGTH);
+    md5_final(&m_contetx, hashval, m_rounds);
     return SUCCESS;
 }
 
@@ -46,10 +45,9 @@ int MD5::Hash(int hashbitlen, const BitSequence *data, DataLength databitlen, Bi
     }
 
     MD5_CTX mdContext{};
-    MD5Init(&mdContext, m_rounds);
-    MD5Update(&mdContext, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen / 8), m_rounds);
-    MD5Final(&mdContext, m_rounds);
-    memcpy((void *) hashval, mdContext.digest, static_cast<size_t>(hashbitlen / 8));
+    md5_init(&mdContext);
+    md5_update(&mdContext, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen / 8), m_rounds);
+    md5_final(&mdContext, hashval, m_rounds);
     return SUCCESS;
 }
 

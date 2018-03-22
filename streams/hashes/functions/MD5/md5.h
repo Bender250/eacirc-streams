@@ -1,73 +1,47 @@
-/*
- **********************************************************************
- ** md5.h -- Header file for implementation of MD5                   **
- ** RSA Data Security, Inc. MD5 Message Digest Algorithm             **
- ** Created: 2/17/90 RLR                                             **
- ** Revised: 12/27/90 SRD,AJ,BSK,JT Reference C version              **
- ** Revised (for MD5): RLR 4/27/91                                   **
- **   -- G modified to have y&~z instead of y&z                      **
- **   -- FF, GG, HH modified to add in last register done            **
- **   -- Access pattern: round 2 works mod 5, round 3 works mod 3    **
- **   -- distinct additive constant for each step                    **
- **   -- round 4 added, working mod 7                                **
- **********************************************************************
- */
-
-/*
- **********************************************************************
- ** Copyright (C) 1990, RSA Data Security, Inc. All rights reserved. **
- **                                                                  **
- ** License to copy and use this software is granted provided that   **
- ** it is identified as the "RSA Data Security, Inc. MD5 Message     **
- ** Digest Algorithm" in all material mentioning or referencing this **
- ** software or this function.                                       **
- **                                                                  **
- ** License is also granted to make and use derivative works         **
- ** provided that such works are identified as "derived from the RSA **
- ** Data Security, Inc. MD5 Message Digest Algorithm" in all         **
- ** material mentioning or referencing the derived work.             **
- **                                                                  **
- ** RSA Data Security, Inc. makes no representations concerning      **
- ** either the merchantability of this software or the suitability   **
- ** of this software for any particular purpose.  It is provided "as **
- ** is" without express or implied warranty of any kind.             **
- **                                                                  **
- ** These notices must be retained in any copies of any part of this **
- ** documentation and/or software.                                   **
- **********************************************************************
- */
+/*********************************************************************
+* Filename:   md5.h
+* Author:     Brad Conte (brad AT bradconte.com)
+* Copyright:
+* Disclaimer: This code is presented "as is" without any guarantees.
+* Details:    Defines the API for the corresponding MD5 implementation.
+*********************************************************************/
 
 #ifndef MD5_H
 #define MD5_H
 
-/* typedef a 32 bit type */
-typedef unsigned long int UINT4;
-
-/* Data structure for MD5 (Message Digest) computation */
-typedef struct {
-    UINT4 i[2];                   /* number of _bits_ handled mod 2^64 */
-    UINT4 buf[4];                                    /* scratch buffer */
-    unsigned char in[64];                              /* input buffer */
-    unsigned char digest[16];     /* actual digest after MD5Final call */
-} MD5_CTX;
-
+/*************************** HEADER FILES ***************************/
+#include <cstddef>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void MD5Init(MD5_CTX *mdContext, int Nr);
-void MD5Update(MD5_CTX *mdContext, unsigned char *inBuf, unsigned int inLen, int Nr = 64);
-void MD5Final(MD5_CTX *mdContext, int Nr);
+/****************************** MACROS ******************************/
+#define MD5_BLOCK_SIZE 16               // MD5 outputs a 16 byte digest
+#define MD5_DIGEST_LENGTH MD5_BLOCK_SIZE
+#define MD5_FULL_ROUNDS 64
+
+/**************************** DATA TYPES ****************************/
+typedef unsigned char BYTE;             // 8-bit byte
+typedef unsigned int WORD;             // 32-bit word, change to "long" for 16-bit machines
+
+typedef struct {
+    BYTE data[64];
+    WORD datalen;
+    unsigned long long bitlen;
+    WORD state[4];
+} MD5_CTX;
+
+typedef unsigned char MD5_DIGEST[MD5_DIGEST_LENGTH];
+
+/*********************** FUNCTION DECLARATIONS **********************/
+void md5_init(MD5_CTX *ctx);
+void md5_update(MD5_CTX *ctx, const BYTE data[], size_t len, unsigned nr);
+void md5_final(MD5_CTX *ctx, BYTE hash[], unsigned nr);
 
 #ifdef __cplusplus
 }
 #endif
 
 
-#define MD5_DIGEST_LENGTH           16
-#define MD5_BLOCK_LENGTH            16
-#define MD5_FULL_ROUNDS             64
-typedef unsigned char    MD5_DIGEST[MD5_DIGEST_LENGTH];
-
-#endif  //MD5_H
+#endif   // MD5_H

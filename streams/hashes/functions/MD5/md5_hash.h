@@ -23,7 +23,6 @@ typedef enum { SUCCESS = 0, FAIL = 1, BAD_HASHLEN = 2 } HashReturn;
 
 private:
     MD5_CTX m_contetx;
-    MD5_DIGEST m_md5Accumulator; // accumulator for MD5
     unsigned m_rounds;
 
 public:
