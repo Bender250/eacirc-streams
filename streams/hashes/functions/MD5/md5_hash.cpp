@@ -28,7 +28,7 @@ int MD5::Init(int hashbitlen)
 
 int MD5::Update(const BitSequence *data, DataLength databitlen)
 {
-    MD5Update(&m_contetx, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen), m_rounds);
+    MD5Update(&m_contetx, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen / 8), m_rounds);
     return SUCCESS;
 }
 
