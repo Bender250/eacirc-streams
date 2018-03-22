@@ -1,0 +1,11 @@
+add_library(hash STATIC EXCLUDE_FROM_ALL
+    hash_factory
+    hash_stream
+    hash_interface
+    functions/hash_functions
+# === SHA-3 hash function files ===
+    functions/MD5/md5
+    functions/MD5/md5_hash
+    functions/SHA2/sha256
+    )
+target_link_libraries(hash eacirc-core)

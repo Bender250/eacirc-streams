@@ -233,6 +233,10 @@ make_stream(const json& config, default_seed_source& seeder, const std::size_t o
     else if (type == "block")
         return std::make_unique<block::block_stream>(config, seeder, osize, stream);
 #endif
+#ifdef BUILD_hash
+    else if (type == "hash")
+        return std::make_unique<hash::hash_stream>(config, seeder, osize, stream);
+#endif
     throw std::runtime_error("requested stream named \"" + type + "\" does not exist");
 }
 

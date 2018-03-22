@@ -23,6 +23,10 @@
 #include <streams/block/block_stream.h>
 #endif
 
+#ifdef BUILD_hash
+#include <streams/hashes/hash_stream.h>
+#endif
+
 namespace _impl {
 
     template <std::uint8_t value>
