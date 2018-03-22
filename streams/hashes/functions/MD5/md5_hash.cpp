@@ -47,7 +47,7 @@ int MD5::Hash(int hashbitlen, const BitSequence *data, DataLength databitlen, Bi
 
     MD5_CTX mdContext{};
     MD5Init(&mdContext, m_rounds);
-    MD5Update(&mdContext, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen), m_rounds);
+    MD5Update(&mdContext, const_cast<unsigned char *>(data), static_cast<unsigned int>(databitlen / 8), m_rounds);
     MD5Final(&mdContext, m_rounds);
     memcpy((void *) data, mdContext.digest, static_cast<size_t>(hashbitlen / 8));
     return SUCCESS;
