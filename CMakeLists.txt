@@ -60,6 +60,7 @@ target_link_libraries(eacirc-streams eacirc-core eacirc-streams-lib)
 build_stream(eacirc-streams estream)
 build_stream(eacirc-streams sha3)
 build_stream(eacirc-streams block)
+build_stream(eacirc-streams hash)
 
 ##############
 # Building of testsuite
