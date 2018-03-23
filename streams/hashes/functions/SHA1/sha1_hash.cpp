@@ -22,7 +22,7 @@
 namespace hash {
     SHA1::SHA1(const int numRounds) {
         if (numRounds <= 0 || numRounds > SHA1_FULL_ROUNDS) {
-            throw std::out_of_range("Valid numRounds range for SHA1 is <1-64>");
+            throw std::out_of_range("Valid numRounds range for SHA1 is <1-80>");
         }
 
         this->m_rounds = (unsigned) numRounds;

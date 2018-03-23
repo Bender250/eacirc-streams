@@ -13,7 +13,7 @@
  */
 
 #include <cstdint>
-#define SHA1_FULL_ROUNDS 64
+#define SHA1_FULL_ROUNDS 80
 
 #ifdef __cplusplus
 extern "C" {
