@@ -26,8 +26,8 @@ typedef struct gost_ctx
 
 void rhash_gost_init(gost_ctx *ctx);
 void rhash_gost_cryptopro_init(gost_ctx *ctx);
-void rhash_gost_update(gost_ctx *ctx, const unsigned char* msg, size_t size);
-void rhash_gost_final(gost_ctx *ctx, unsigned char result[32]);
+void rhash_gost_update(gost_ctx *ctx, const unsigned char* msg, size_t size, unsigned nr);
+void rhash_gost_final(gost_ctx *ctx, unsigned char result[32], unsigned nr);
 
 #ifdef GENERATE_GOST_LOOKUP_TABLE
 void rhash_gost_init_table(void); /* initialize algorithm static data */

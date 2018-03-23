@@ -17,7 +17,7 @@
  * https://github.com/rhash/RHash/blob/master/librhash/gost.c
  */
 
-#include <string.h>
+#include <cstring>
 #include "../Whirlpool/byte_order.h"
 #include "gost.h"
 
@@ -57,7 +57,6 @@ void rhash_gost_cryptopro_init(gost_ctx *ctx)
  *  Temporary variables tmp assumed and variables r and l for left and right
  *  blocks.
  */
-#ifndef USE_GCC_ASM_IA32
 # define GOST_ENCRYPT_ROUND(key1, key2, sbox) \
 	tmp = (key1) + r; \
 	l ^= (sbox)[tmp & 0xff] ^ ((sbox) + 256)[(tmp >> 8) & 0xff] ^ \
@@ -67,16 +66,33 @@ void rhash_gost_cryptopro_init(gost_ctx *ctx)
 		((sbox) + 512)[(tmp >> 16) & 0xff] ^ ((sbox) + 768)[tmp >> 24];
 
 /* encrypt a block with the given key */
-# define GOST_ENCRYPT(result, i, key, hash, sbox) \
+/* ph4r05: round reduced version from the macro below */
+void gost_encrypt_fnc(unsigned * result, unsigned i, const unsigned * key, const unsigned * hash,
+                      const unsigned * sbox, unsigned nr)
+{
+    unsigned l, r, tmp, jj;
+    r = hash[i], l = hash[i + 1];
+    for(jj = 0; jj < 12 && jj < nr; ++jj){
+        GOST_ENCRYPT_ROUND(key[2 * jj + 0], key[2 * jj + 1], sbox)
+    }
+    for(jj = 12; jj < 16 && jj < nr; ++jj){
+        GOST_ENCRYPT_ROUND(key[2 * (16 - jj) - 1], key[2 * (16 - jj) - 2], sbox)
+    }
+
+    result[i] = l, result[i + 1] = r;
+}
+
+/* encrypt a block with the given key */
+# define GOST_ENCRYPT(result, i, key, hash, sbox, nr) \
 	r = hash[i], l = hash[i + 1]; \
 	GOST_ENCRYPT_ROUND(key[0], key[1], sbox) \
 	GOST_ENCRYPT_ROUND(key[2], key[3], sbox) \
-	GOST_ENCRYPT_ROUND(key[4], key[5], sbox) \
-	GOST_ENCRYPT_ROUND(key[6], key[7], sbox) \
-	GOST_ENCRYPT_ROUND(key[0], key[1], sbox) \
-	GOST_ENCRYPT_ROUND(key[2], key[3], sbox) \
-	GOST_ENCRYPT_ROUND(key[4], key[5], sbox) \
-	GOST_ENCRYPT_ROUND(key[6], key[7], sbox) \
+    GOST_ENCRYPT_ROUND(key[4], key[5], sbox) \
+    GOST_ENCRYPT_ROUND(key[6], key[7], sbox) \
+    GOST_ENCRYPT_ROUND(key[0], key[1], sbox) \
+    GOST_ENCRYPT_ROUND(key[2], key[3], sbox) \
+    GOST_ENCRYPT_ROUND(key[4], key[5], sbox) \
+    GOST_ENCRYPT_ROUND(key[6], key[7], sbox) \
 	GOST_ENCRYPT_ROUND(key[0], key[1], sbox) \
 	GOST_ENCRYPT_ROUND(key[2], key[3], sbox) \
 	GOST_ENCRYPT_ROUND(key[4], key[5], sbox) \
@@ -87,30 +103,6 @@ void rhash_gost_cryptopro_init(gost_ctx *ctx)
 	GOST_ENCRYPT_ROUND(key[1], key[0], sbox) \
 	result[i] = l, result[i + 1] = r;
 
-#else /* USE_GCC_ASM_IA32 */
-
-/* a faster x86 version of GOST_ENCRYPT() */
-/* it supposes edi=r, esi=l, edx=sbox ; */
-# define ENC_ROUND_ASMx86(key, reg1, reg2) \
-	"movl %" #key ", %%eax\n\t" \
-	"addl %%" #reg1 ", %%eax\n\t" \
-	"movzx %%al, %%ebx\n\t" \
-	"movzx %%ah, %%ecx\n\t" \
-	"xorl (%%edx, %%ebx, 4), %%" #reg2 "\n\t" \
-	"xorl 1024(%%edx, %%ecx, 4), %%" #reg2 "\n\t" \
-	"shrl $16, %%eax\n\t" \
-	"movzx %%al, %%ebx\n\t" \
-	"shrl $8, %%eax\n\t" \
-	"xorl 2048(%%edx, %%ebx, 4), %%" #reg2 "\n\t" \
-	"xorl 3072(%%edx, %%eax, 4), %%" #reg2 "\n\t"
-
-# define ENC_ASM(key1, key2) ENC_ROUND_ASMx86(key1, edi, esi) ENC_ROUND_ASMx86(key2, esi, edi)
-# define GOST_ENCRYPT_GCC_ASM_X86() \
-	ENC_ASM( 5,  6) ENC_ASM( 7,  8) ENC_ASM( 9, 10) ENC_ASM(11, 12) \
-	ENC_ASM( 5,  6) ENC_ASM( 7,  8) ENC_ASM( 9, 10) ENC_ASM(11, 12) \
-	ENC_ASM( 5,  6) ENC_ASM( 7,  8) ENC_ASM( 9, 10) ENC_ASM(11, 12) \
-	ENC_ASM(12, 11) ENC_ASM(10,  9) ENC_ASM( 8,  7) ENC_ASM( 6,  5)
-#endif /* USE_GCC_ASM_IA32 */
 
 /**
  * The core transformation. Process a 512-bit block.
@@ -118,7 +110,7 @@ void rhash_gost_cryptopro_init(gost_ctx *ctx)
  * @param hash intermediate message hash
  * @param block the message block to process
  */
-static void rhash_gost_block_compress(gost_ctx *ctx, const unsigned* block)
+static void rhash_gost_block_compress(gost_ctx *ctx, const unsigned* block, unsigned nr)
 {
     unsigned i;
     unsigned key[8], u[8], v[8], w[8], s[8];
@@ -147,24 +139,11 @@ static void rhash_gost_block_compress(gost_ctx *ctx, const unsigned* block)
         key[7] = ((w[1] & 0xff000000) >> 24) | ((w[3] & 0xff000000) >> 16) | ((w[5] & 0xff000000) >> 8) | (w[7] & 0xff000000);
 
         /* encryption: s_i := E_{key_i} (h_i) */
-#ifndef USE_GCC_ASM_IA32
         {
-            unsigned l, r, tmp;
-            GOST_ENCRYPT(s, i, key, ctx->hash, sbox);
+            // unsigned l, r, tmp;
+            // GOST_ENCRYPT(s, i, key, ctx->hash, sbox);
+            gost_encrypt_fnc(s, i, key, ctx->hash, sbox, nr);
         }
-#else /* USE_GCC_ASM_IA32 */
-        __asm __volatile(
-			"movl %%ebx, %13\n\t"
-			GOST_ENCRYPT_GCC_ASM_X86() /* optimized for x86 Intel Core 2 */
-			"movl %13, %%ebx\n\t"
-			: "=S" (s[i]), "=D" (s[i + 1]) /* 0,1: s[i]=esi, s[i + 1]=edi */
-			: "d" (sbox), "D" (ctx->hash[i]), "S" (ctx->hash[i + 1]), /* 2,3,4: edx=sbox,edi=r,esi=l */
-			"m" (key[0]), "m" (key[1]), "m" (key[2]), "m" (key[3]), /* 5, 6, 7, 8 */
-			"m" (key[4]), "m" (key[5]), "m" (key[6]), "m" (key[7]), /* 9,10,11,12 */
-			"m" (w[0])  /* store EBX in w[0], cause it's used for PIC on *BSD. */
-			/* We avoid push/pop instructions incompatible with gcc -fomit-frame-pointer */
-			: "cc", "eax", "ecx");
-#endif /* USE_GCC_ASM_IA32 */
 
         if (i == 0) {
             /* w:= A(u) ^ A^2(v) */
@@ -278,7 +257,7 @@ static void rhash_gost_block_compress(gost_ctx *ctx, const unsigned* block)
  * @param ctx algorithm context
  * @param block the 256-bit message block to process
  */
-static void rhash_gost_compute_sum_and_hash(gost_ctx * ctx, const unsigned* block)
+static void rhash_gost_compute_sum_and_hash(gost_ctx * ctx, const unsigned* block, unsigned nr)
 {
 #if IS_LITTLE_ENDIAN
     # define block_le block
@@ -334,7 +313,7 @@ static void rhash_gost_compute_sum_and_hash(gost_ctx * ctx, const unsigned* bloc
 #endif /* USE_GCC_ASM_IA32 */
 
     /* update message hash */
-    rhash_gost_block_compress(ctx, block_le);
+    rhash_gost_block_compress(ctx, block_le, nr);
 }
 
 /**
@@ -345,7 +324,7 @@ static void rhash_gost_compute_sum_and_hash(gost_ctx * ctx, const unsigned* bloc
  * @param msg message chunk
  * @param size length of the message chunk
  */
-void rhash_gost_update(gost_ctx *ctx, const unsigned char* msg, size_t size)
+void rhash_gost_update(gost_ctx *ctx, const unsigned char* msg, size_t size, unsigned nr)
 {
     unsigned index = (unsigned)ctx->length & 31;
     ctx->length += size;
@@ -357,7 +336,7 @@ void rhash_gost_update(gost_ctx *ctx, const unsigned char* msg, size_t size)
         if (size < left) return;
 
         /* process partial block */
-        rhash_gost_compute_sum_and_hash(ctx, (unsigned*)ctx->message);
+        rhash_gost_compute_sum_and_hash(ctx, (unsigned*)ctx->message, nr);
         msg += left;
         size -= left;
     }
@@ -376,7 +355,7 @@ void rhash_gost_update(gost_ctx *ctx, const unsigned char* msg, size_t size)
             aligned_message_block = (unsigned*)ctx->message;
         }
 
-        rhash_gost_compute_sum_and_hash(ctx, aligned_message_block);
+        rhash_gost_compute_sum_and_hash(ctx, aligned_message_block, nr);
         msg += gost_block_size;
         size -= gost_block_size;
     }
@@ -392,7 +371,7 @@ void rhash_gost_update(gost_ctx *ctx, const unsigned char* msg, size_t size)
  * @param ctx the algorithm context containing current hashing state
  * @param result calculated hash in binary form
  */
-void rhash_gost_final(gost_ctx *ctx, unsigned char result[32])
+void rhash_gost_final(gost_ctx *ctx, unsigned char result[32], unsigned nr)
 {
     unsigned  index = (unsigned)ctx->length & 31;
     unsigned* msg32 = (unsigned*)ctx->message;
@@ -400,7 +379,7 @@ void rhash_gost_final(gost_ctx *ctx, unsigned char result[32])
     /* pad the last block with zeroes and hash it */
     if (index > 0) {
         memset(ctx->message + index, 0, 32 - index);
-        rhash_gost_compute_sum_and_hash(ctx, msg32);
+        rhash_gost_compute_sum_and_hash(ctx, msg32, nr);
     }
 
     /* hash the message length and the sum */
@@ -408,8 +387,8 @@ void rhash_gost_final(gost_ctx *ctx, unsigned char result[32])
     msg32[1] = (unsigned)(ctx->length >> 29);
     memset(msg32 + 2, 0, sizeof(unsigned)*6);
 
-    rhash_gost_block_compress(ctx, msg32);
-    rhash_gost_block_compress(ctx, ctx->sum);
+    rhash_gost_block_compress(ctx, msg32, nr);
+    rhash_gost_block_compress(ctx, ctx->sum, nr);
 
     /* convert hash state to result bytes */
     le32_copy(result, 0, ctx->hash, gost_hash_length);
