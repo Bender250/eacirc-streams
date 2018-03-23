@@ -11,6 +11,7 @@ extern "C" {
 
 #define gost_block_size 32
 #define gost_hash_length 32
+#define gost_full_rounds 16
 
 /* algorithm context */
 typedef struct gost_ctx

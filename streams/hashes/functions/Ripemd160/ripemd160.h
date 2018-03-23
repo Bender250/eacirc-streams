@@ -17,6 +17,7 @@ extern "C" {
 
 #define ripemd160_block_size 64
 #define ripemd160_hash_size  20
+#define ripemd160_full_rounds  80
 
 /* algorithm context */
 typedef struct ripemd160_ctx
