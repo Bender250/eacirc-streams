@@ -8,7 +8,7 @@
 
 #include "testsuite/test-utils/hash_test_case.h"
 
-/** Source of test vectors http://csrc.nist.gov/groups/ST/hash/sha-3/index.html */
+/** Source of test vectors https://github.com/rhash/RHash/blob/master/librhash/test_hashes.c */
 
 
 TEST(gost, test_vectors) {
@@ -29,6 +29,10 @@ TEST(sha256, test_vectors) {
 
 TEST(md5, test_vectors) {
     testsuite::hash_test_case("MD5", 64)();
+}
+
+TEST(tiger, test_vectors) {
+    testsuite::hash_test_case("Tiger", 24)();
 }
 
 TEST(whirlpool, test_vectors) {

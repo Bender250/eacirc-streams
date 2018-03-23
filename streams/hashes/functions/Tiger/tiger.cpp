@@ -81,6 +81,24 @@ extern uint64_t rhash_tiger_sboxes[4][256];
 	round(a,b,c,x6,mul) \
 	round(b,c,a,x7,mul)
 
+#define pass_rr(a,b,c,mul,ii,nr) \
+    if(8*(ii)+1 <= (nr)) \
+	round(a,b,c,x0,mul) \
+    if(8*(ii)+2 <= (nr)) \
+    round(b,c,a,x1,mul) \
+    if(8*(ii)+3 <= (nr)) \
+	round(c,a,b,x2,mul) \
+    if(8*(ii)+4 <= (nr)) \
+	round(a,b,c,x3,mul) \
+    if(8*(ii)+5 <= (nr)) \
+	round(b,c,a,x4,mul) \
+    if(8*(ii)+6 <= (nr)) \
+	round(c,a,b,x5,mul) \
+    if(8*(ii)+7 <= (nr)) \
+	round(a,b,c,x6,mul) \
+    if(8*(ii)+8 <= (nr)) \
+	round(b,c,a,x7,mul)
+
 #define key_schedule { \
 	x0 -= x7 ^ I64(0xA5A5A5A5A5A5A5A5); \
 	x1 ^= x0; \
@@ -106,7 +124,7 @@ extern uint64_t rhash_tiger_sboxes[4][256];
  * @param state the algorithm state
  * @param block the message block to process
  */
-static void rhash_tiger_process_block(uint64_t state[3], uint64_t* block)
+static void rhash_tiger_process_block(uint64_t state[3], uint64_t* block, unsigned nr)
 {
     /* Optimized for GCC IA32.
        The order of declarations is important for compiler. */
@@ -130,18 +148,18 @@ static void rhash_tiger_process_block(uint64_t state[3], uint64_t* block)
 #ifndef CPU_X64
     for (i = 0; i < 3; i++) {
         if (i != 0) key_schedule;
-        pass(a, b, c, (i == 0 ? 5 : i == 1 ? 7 : 9));
+        pass_rr(a, b, c, (i == 0 ? 5 : i == 1 ? 7 : 9), i, nr);
         tmp = a;
         a = c;
         c = b;
         b = tmp;
     }
 #else
-    pass(a, b, c, 5);
+    pass_rr(a, b, c, 5, 0, nr);
 	key_schedule;
-	pass(c, a, b, 7);
+    pass_rr(c, a, b, 7, 0, nr);
 	key_schedule;
-	pass(b, c, a, 9);
+    pass_rr(b, c, a, 9, 0, nr);
 #endif
 
     /* feedforward operation */
@@ -158,7 +176,7 @@ static void rhash_tiger_process_block(uint64_t state[3], uint64_t* block)
  * @param msg message chunk
  * @param size length of the message chunk
  */
-void rhash_tiger_update(tiger_ctx *ctx, const unsigned char* msg, size_t size)
+void rhash_tiger_update(tiger_ctx *ctx, const unsigned char* msg, size_t size, unsigned nr)
 {
     size_t index = (size_t)ctx->length & 63;
     ctx->length += size;
@@ -171,7 +189,7 @@ void rhash_tiger_update(tiger_ctx *ctx, const unsigned char* msg, size_t size)
             return;
         } else {
             memcpy(ctx->message + index, msg, left);
-            rhash_tiger_process_block(ctx->hash, (uint64_t*)ctx->message);
+            rhash_tiger_process_block(ctx->hash, (uint64_t*)ctx->message, nr);
             msg += left;
             size -= left;
         }
@@ -180,10 +198,10 @@ void rhash_tiger_update(tiger_ctx *ctx, const unsigned char* msg, size_t size)
         if (IS_ALIGNED_64(msg)) {
             /* the most common case is processing of an already aligned message
             without copying it */
-            rhash_tiger_process_block(ctx->hash, (uint64_t*)msg);
+            rhash_tiger_process_block(ctx->hash, (uint64_t*)msg, nr);
         } else {
             memcpy(ctx->message, msg, tiger_block_size);
-            rhash_tiger_process_block(ctx->hash, (uint64_t*)ctx->message);
+            rhash_tiger_process_block(ctx->hash, (uint64_t*)ctx->message, nr);
         }
 
         msg += tiger_block_size;
@@ -201,7 +219,7 @@ void rhash_tiger_update(tiger_ctx *ctx, const unsigned char* msg, size_t size)
  * @param ctx the algorithm context containing current hashing state
  * @param result calculated hash in binary form
  */
-void rhash_tiger_final(tiger_ctx *ctx, unsigned char result[24])
+void rhash_tiger_final(tiger_ctx *ctx, unsigned char result[24], unsigned nr)
 {
     unsigned index = (unsigned)ctx->length & 63;
     uint64_t* msg64 = (uint64_t*)ctx->message;
@@ -217,14 +235,14 @@ void rhash_tiger_final(tiger_ctx *ctx, unsigned char result[24])
         while (index < 64) {
             ctx->message[index++] = 0;
         }
-        rhash_tiger_process_block(ctx->hash, msg64);
+        rhash_tiger_process_block(ctx->hash, msg64, nr);
         index = 0;
     }
     while (index < 56) {
         ctx->message[index++] = 0;
     }
     msg64[7] = le2me_64(ctx->length << 3);
-    rhash_tiger_process_block(ctx->hash, msg64);
+    rhash_tiger_process_block(ctx->hash, msg64, nr);
 
     /* save result hash */
     le64_copy(result, 0, &ctx->hash, 24);

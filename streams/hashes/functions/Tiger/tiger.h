@@ -1,7 +1,9 @@
 //
 // Created by Dusan Klinec on 23/03/2018.
 // https://github.com/rhash/RHash/blob/master/librhash/tiger.h
-//
+// https://web.archive.org/web/20160304042512/http://th.informatik.uni-mannheim.de/People/Lucks/papers/Tiger_FSE_v10.pdf
+// https://www.esat.kuleuven.be/cosic/publications/article-1138.pdf
+// https://en.wikipedia.org/wiki/Tiger_(cryptography)
 
 #ifndef EACIRC_STREAMS_TIGER_H
 #define EACIRC_STREAMS_TIGER_H
@@ -15,6 +17,7 @@ extern "C" {
 
 #define tiger_block_size 64
 #define tiger_hash_length 24
+#define tiger_full_rounds 24
 
 /* algorithm context */
 typedef struct tiger_ctx
@@ -29,8 +32,8 @@ typedef struct tiger_ctx
 /* hash functions */
 
 void rhash_tiger_init(tiger_ctx *ctx);
-void rhash_tiger_update(tiger_ctx *ctx, const unsigned char* msg, size_t size);
-void rhash_tiger_final(tiger_ctx *ctx, unsigned char result[24]);
+void rhash_tiger_update(tiger_ctx *ctx, const unsigned char* msg, size_t size, unsigned nr);
+void rhash_tiger_final(tiger_ctx *ctx, unsigned char result[24], unsigned nr);
 
 #ifdef __cplusplus
 } /* extern "C" */
