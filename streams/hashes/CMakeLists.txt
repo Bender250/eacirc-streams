@@ -13,6 +13,7 @@ add_library(hash STATIC EXCLUDE_FROM_ALL
     functions/SHA2/sha256
     functions/Ripemd160/ripemd160
     functions/Ripemd160/ripemd160_hash
+    functions/Tiger/tiger
     functions/Whirlpool/byte_order
     functions/Whirlpool/whirlpool
     functions/Whirlpool/whirlpool_sbox.cpp
