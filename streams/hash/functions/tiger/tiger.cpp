@@ -17,7 +17,7 @@
  */
 
 #include <cstring>
-#include "../Whirlpool/byte_order.h"
+#include "../whirlpool/byte_order.h"
 #include "tiger.h"
 
 /**

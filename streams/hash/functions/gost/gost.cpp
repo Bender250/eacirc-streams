@@ -18,7 +18,7 @@
  */
 
 #include <cstring>
-#include "../Whirlpool/byte_order.h"
+#include "../whirlpool/byte_order.h"
 #include "gost.h"
 
 extern unsigned rhash_gost_sbox[4][256];

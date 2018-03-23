@@ -16,7 +16,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE.  Use this program  at  your own risk!
  */
-#include "../Whirlpool/byte_order.h"
+#include "../whirlpool/byte_order.h"
 
 /* Four S-boxes used for table lookups by Tiger hash function. 8Kb in total. */
 uint64_t rhash_tiger_sboxes[4][256] = {
