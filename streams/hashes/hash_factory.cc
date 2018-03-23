@@ -14,6 +14,7 @@ std::unique_ptr<hash_interface> hash_factory::create(const std::string& name, co
     // clang-format off
     if (name == "MD5")         return std::make_unique<MD5>(rounds);
     if (name == "SHA256")      return std::make_unique<SHA256>(rounds);
+    if (name == "SHA1")      return std::make_unique<SHA1>(rounds);
     // clang-format on
 
     throw std::runtime_error("requested HASH algorithm named \"" + name +

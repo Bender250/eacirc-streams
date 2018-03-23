@@ -15,8 +15,11 @@
 #include <cstdint>
 #define SHA1_FULL_ROUNDS 64
 
-typedef struct
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct {
     uint32_t state[5];
     uint32_t count[2];
     unsigned char buffer[64];
@@ -24,15 +27,16 @@ typedef struct
 
 void SHA1Transform(
     uint32_t state[5],
-    const unsigned char buffer[64]
+    const unsigned char buffer[64],
+    unsigned nr
 );
 
 void SHA1Init(
-    SHA1_CTX * context
+    SHA1_CTX *context
 );
 
 void SHA1Update(
-    SHA1_CTX * context,
+    SHA1_CTX *context,
     const unsigned char *data,
     uint32_t len,
     unsigned nr
@@ -40,7 +44,7 @@ void SHA1Update(
 
 void SHA1Final(
     unsigned char digest[20],
-    SHA1_CTX * context,
+    SHA1_CTX *context,
     unsigned nr
 );
 
@@ -50,5 +54,8 @@ void SHA1(
     int len,
     unsigned nr);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif //EACIRC_STREAMS_SHA1_H

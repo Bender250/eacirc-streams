@@ -222,7 +222,7 @@ void SHA1Update(
     if ((j + len) > 63)
     {
         memcpy(&context->buffer[j], data, (i = 64 - j));
-        SHA1Transform(context->state, context->buffer);
+        SHA1Transform(context->state, context->buffer, nr);
         for (; i + 63 < len; i += 64)
         {
             SHA1Transform(context->state, &data[i], nr);
@@ -296,7 +296,7 @@ void SHA1(
     unsigned nr)
 {
     SHA1_CTX ctx{};
-    unsigned int ii;
+    int ii;
 
     SHA1Init(&ctx);
     for (ii=0; ii<len; ii+=1)
