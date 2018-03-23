@@ -12,7 +12,7 @@
 
 
 TEST(gost, test_vectors) {
-    testsuite::hash_test_case("Gost", 16)();
+    testsuite::hash_test_case("Gost", 32)();
 }
 
 TEST(ripemd160, test_vectors) {

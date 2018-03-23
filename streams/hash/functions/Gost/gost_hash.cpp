@@ -8,7 +8,7 @@
 namespace hash {
     Gost::Gost(const int numRounds) {
         if (numRounds <= 0 || numRounds > gost_full_rounds) {
-            throw std::out_of_range("Valid numRounds range for Gost is <1-16>");
+            throw std::out_of_range("Valid numRounds range for Gost is <1-32>");
         }
 
         this->m_rounds = (unsigned) numRounds;

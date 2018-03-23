@@ -65,6 +65,16 @@ void rhash_gost_cryptopro_init(gost_ctx *ctx)
 	r ^= (sbox)[tmp & 0xff] ^ ((sbox) + 256)[(tmp >> 8) & 0xff] ^ \
 		((sbox) + 512)[(tmp >> 16) & 0xff] ^ ((sbox) + 768)[tmp >> 24];
 
+# define GOST_ENCRYPT_ROUND_L(key1, key2, sbox) \
+	tmp = (key1) + r; \
+	l ^= (sbox)[tmp & 0xff] ^ ((sbox) + 256)[(tmp >> 8) & 0xff] ^ \
+		((sbox) + 512)[(tmp >> 16) & 0xff] ^ ((sbox) + 768)[tmp >> 24]; \
+
+# define GOST_ENCRYPT_ROUND_R(key1, key2, sbox) \
+	tmp = (key2) + l; \
+	r ^= (sbox)[tmp & 0xff] ^ ((sbox) + 256)[(tmp >> 8) & 0xff] ^ \
+		((sbox) + 512)[(tmp >> 16) & 0xff] ^ ((sbox) + 768)[tmp >> 24];
+
 /* encrypt a block with the given key */
 /* ph4r05: round reduced version from the macro below */
 void gost_encrypt_fnc(unsigned int * result, unsigned int i, const unsigned int * key, const unsigned int * hash,
@@ -72,11 +82,17 @@ void gost_encrypt_fnc(unsigned int * result, unsigned int i, const unsigned int 
 {
     unsigned l, r, tmp, jj;
     r = hash[i], l = hash[i + 1];
-    for(jj = 0; jj < 12 && jj < nr; ++jj){
-        GOST_ENCRYPT_ROUND(key[(2 * jj + 0) % 8], key[(2 * jj + 1) % 8], sbox)
+    for(jj = 0; jj < 12 && 2*jj < nr; ++jj){
+        GOST_ENCRYPT_ROUND_L(key[(2 * jj + 0) % 8], key[(2 * jj + 1) % 8], sbox)
+        if (2*jj + 1 < nr) {
+            GOST_ENCRYPT_ROUND_R(key[(2 * jj + 0) % 8], key[(2 * jj + 1) % 8], sbox)
+        }
     }
-    for(jj = 12; jj < 16 && jj < nr; ++jj){
-        GOST_ENCRYPT_ROUND(key[2 * (16 - jj) - 1], key[2 * (16 - jj) - 2], sbox)
+    for(jj = 12; jj < 16 && 2*jj < nr; ++jj){
+        GOST_ENCRYPT_ROUND_L(key[2 * (16 - jj) - 1], key[2 * (16 - jj) - 2], sbox)
+        if (2*jj + 1 < nr) {
+            GOST_ENCRYPT_ROUND_R(key[2 * (16 - jj) - 1], key[2 * (16 - jj) - 2], sbox)
+        }
     }
 
     result[i] = l, result[i + 1] = r;
