@@ -9,5 +9,9 @@ add_library(hash STATIC EXCLUDE_FROM_ALL
     functions/SHA1/sha1
     functions/SHA1/sha1_hash
     functions/SHA2/sha256
+    functions/Whirlpool/byte_order
+    functions/Whirlpool/whirlpool
+    functions/Whirlpool/whirlpool_sbox.cpp
+    functions/Whirlpool/whirlpool_hash
     )
 target_link_libraries(hash eacirc-core)
