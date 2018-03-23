@@ -70,7 +70,7 @@ void rhash_ripemd160_init(ripemd160_ctx *ctx)
  */
 static void rhash_ripemd160_process_block(unsigned *hash, const unsigned* X, unsigned nr)
 {
-    register unsigned A = hash[0],  B = hash[1],  C = hash[2],
+    unsigned A = hash[0],  B = hash[1],  C = hash[2],
         D = hash[3],  E = hash[4];
     unsigned a1, b1, c1, d1, e1;
 
