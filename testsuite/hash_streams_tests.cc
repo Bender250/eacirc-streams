@@ -10,10 +10,10 @@
 
 /** Source of test vectors http://csrc.nist.gov/groups/ST/hash/sha-3/index.html */
 
-//
-//TEST(gost, test_vectors) {
-//    testsuite::hash_test_case("Gost", 16)();
-//}
+
+TEST(gost, test_vectors) {
+    testsuite::hash_test_case("Gost", 16)();
+}
 
 TEST(ripemd160, test_vectors) {
     testsuite::hash_test_case("RIPEMD160", 80)();
