@@ -15,6 +15,10 @@
 //    testsuite::hash_test_case("Gost", 16)();
 //}
 
+TEST(ripemd160, test_vectors) {
+    testsuite::hash_test_case("RIPEMD160", 80)();
+}
+
 TEST(sha1, test_vectors) {
     testsuite::hash_test_case("SHA1", 80)();
 }
