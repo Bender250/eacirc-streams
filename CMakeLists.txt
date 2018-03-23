@@ -92,7 +92,7 @@ if (BUILD_testsuite)
             testsuite/test-utils/common_functions
             testsuite/test-utils/test_case.h)
 
-    set_source_files_properties(streams.cpp PROPERTIES COMPILE_FLAGS "TEST_STREAM")
+    set_source_files_properties(streams.cc PROPERTIES COMPILE_DEFINITIONS "TEST_STREAM=1")
 
     file(COPY testsuite/test-resources DESTINATION resources)
 
