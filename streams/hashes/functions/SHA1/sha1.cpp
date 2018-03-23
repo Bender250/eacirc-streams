@@ -58,7 +58,8 @@ A million repetitions of "a"
 
 void SHA1Transform(
     uint32_t state[5],
-    const unsigned char buffer[64]
+    const unsigned char buffer[64],
+    unsigned nr
 )
 {
     uint32_t a, b, c, d, e;
@@ -88,89 +89,89 @@ void SHA1Transform(
     d = state[3];
     e = state[4];
     /* 4 rounds of 20 operations each. Loop unrolled. */
-    R0(a, b, c, d, e, 0); 
-    R0(e, a, b, c, d, 1);
-    R0(d, e, a, b, c, 2);
-    R0(c, d, e, a, b, 3);
-    R0(b, c, d, e, a, 4);
-    R0(a, b, c, d, e, 5);
-    R0(e, a, b, c, d, 6);
-    R0(d, e, a, b, c, 7);
-    R0(c, d, e, a, b, 8);
-    R0(b, c, d, e, a, 9);
-    R0(a, b, c, d, e, 10);
-    R0(e, a, b, c, d, 11);
-    R0(d, e, a, b, c, 12);
-    R0(c, d, e, a, b, 13);
-    R0(b, c, d, e, a, 14);
-    R0(a, b, c, d, e, 15);
-    R1(e, a, b, c, d, 16);
-    R1(d, e, a, b, c, 17);
-    R1(c, d, e, a, b, 18);
-    R1(b, c, d, e, a, 19);
-    R2(a, b, c, d, e, 20);
-    R2(e, a, b, c, d, 21);
-    R2(d, e, a, b, c, 22);
-    R2(c, d, e, a, b, 23);
-    R2(b, c, d, e, a, 24);
-    R2(a, b, c, d, e, 25);
-    R2(e, a, b, c, d, 26);
-    R2(d, e, a, b, c, 27);
-    R2(c, d, e, a, b, 28);
-    R2(b, c, d, e, a, 29);
-    R2(a, b, c, d, e, 30);
-    R2(e, a, b, c, d, 31);
-    R2(d, e, a, b, c, 32);
-    R2(c, d, e, a, b, 33);
-    R2(b, c, d, e, a, 34);
-    R2(a, b, c, d, e, 35);
-    R2(e, a, b, c, d, 36);
-    R2(d, e, a, b, c, 37);
-    R2(c, d, e, a, b, 38);
-    R2(b, c, d, e, a, 39);
-    R3(a, b, c, d, e, 40);
-    R3(e, a, b, c, d, 41);
-    R3(d, e, a, b, c, 42);
-    R3(c, d, e, a, b, 43);
-    R3(b, c, d, e, a, 44);
-    R3(a, b, c, d, e, 45);
-    R3(e, a, b, c, d, 46);
-    R3(d, e, a, b, c, 47);
-    R3(c, d, e, a, b, 48);
-    R3(b, c, d, e, a, 49);
-    R3(a, b, c, d, e, 50);
-    R3(e, a, b, c, d, 51);
-    R3(d, e, a, b, c, 52);
-    R3(c, d, e, a, b, 53);
-    R3(b, c, d, e, a, 54);
-    R3(a, b, c, d, e, 55);
-    R3(e, a, b, c, d, 56);
-    R3(d, e, a, b, c, 57);
-    R3(c, d, e, a, b, 58);
-    R3(b, c, d, e, a, 59);
-    R4(a, b, c, d, e, 60);
-    R4(e, a, b, c, d, 61);
-    R4(d, e, a, b, c, 62);
-    R4(c, d, e, a, b, 63);
-    R4(b, c, d, e, a, 64);
-    R4(a, b, c, d, e, 65);
-    R4(e, a, b, c, d, 66);
-    R4(d, e, a, b, c, 67);
-    R4(c, d, e, a, b, 68);
-    R4(b, c, d, e, a, 69);
-    R4(a, b, c, d, e, 70);
-    R4(e, a, b, c, d, 71);
-    R4(d, e, a, b, c, 72);
-    R4(c, d, e, a, b, 73);
-    R4(b, c, d, e, a, 74);
-    R4(a, b, c, d, e, 75);
-    R4(e, a, b, c, d, 76);
-    R4(d, e, a, b, c, 77);
-    R4(c, d, e, a, b, 78);
-    R4(b, c, d, e, a, 79);
+    R0(a, b, c, d, e, 0); if (nr == 1) goto finish;
+    R0(e, a, b, c, d, 1); if (nr == 2) goto finish;
+    R0(d, e, a, b, c, 2); if (nr == 3) goto finish;
+    R0(c, d, e, a, b, 3); if (nr == 4) goto finish;
+    R0(b, c, d, e, a, 4); if (nr == 5) goto finish;
+    R0(a, b, c, d, e, 5); if (nr == 6) goto finish;
+    R0(e, a, b, c, d, 6); if (nr == 7) goto finish;
+    R0(d, e, a, b, c, 7); if (nr == 8) goto finish;
+    R0(c, d, e, a, b, 8); if (nr == 9) goto finish;
+    R0(b, c, d, e, a, 9); if (nr == 10) goto finish;
+    R0(a, b, c, d, e, 10); if (nr == 11) goto finish;
+    R0(e, a, b, c, d, 11); if (nr == 12) goto finish;
+    R0(d, e, a, b, c, 12); if (nr == 13) goto finish;
+    R0(c, d, e, a, b, 13); if (nr == 14) goto finish;
+    R0(b, c, d, e, a, 14); if (nr == 15) goto finish;
+    R0(a, b, c, d, e, 15); if (nr == 16) goto finish;
+    R1(e, a, b, c, d, 16); if (nr == 17) goto finish;
+    R1(d, e, a, b, c, 17); if (nr == 18) goto finish;
+    R1(c, d, e, a, b, 18); if (nr == 19) goto finish;
+    R1(b, c, d, e, a, 19); if (nr == 20) goto finish;
+    R2(a, b, c, d, e, 20); if (nr == 21) goto finish;
+    R2(e, a, b, c, d, 21); if (nr == 22) goto finish;
+    R2(d, e, a, b, c, 22); if (nr == 23) goto finish;
+    R2(c, d, e, a, b, 23); if (nr == 24) goto finish;
+    R2(b, c, d, e, a, 24); if (nr == 25) goto finish;
+    R2(a, b, c, d, e, 25); if (nr == 26) goto finish;
+    R2(e, a, b, c, d, 26); if (nr == 27) goto finish;
+    R2(d, e, a, b, c, 27); if (nr == 28) goto finish;
+    R2(c, d, e, a, b, 28); if (nr == 29) goto finish;
+    R2(b, c, d, e, a, 29); if (nr == 30) goto finish;
+    R2(a, b, c, d, e, 30); if (nr == 31) goto finish;
+    R2(e, a, b, c, d, 31); if (nr == 32) goto finish;
+    R2(d, e, a, b, c, 32); if (nr == 33) goto finish;
+    R2(c, d, e, a, b, 33); if (nr == 34) goto finish;
+    R2(b, c, d, e, a, 34); if (nr == 35) goto finish;
+    R2(a, b, c, d, e, 35); if (nr == 36) goto finish;
+    R2(e, a, b, c, d, 36); if (nr == 37) goto finish;
+    R2(d, e, a, b, c, 37); if (nr == 38) goto finish;
+    R2(c, d, e, a, b, 38); if (nr == 39) goto finish;
+    R2(b, c, d, e, a, 39); if (nr == 40) goto finish;
+    R3(a, b, c, d, e, 40); if (nr == 41) goto finish;
+    R3(e, a, b, c, d, 41); if (nr == 42) goto finish;
+    R3(d, e, a, b, c, 42); if (nr == 43) goto finish;
+    R3(c, d, e, a, b, 43); if (nr == 44) goto finish;
+    R3(b, c, d, e, a, 44); if (nr == 45) goto finish;
+    R3(a, b, c, d, e, 45); if (nr == 46) goto finish;
+    R3(e, a, b, c, d, 46); if (nr == 47) goto finish;
+    R3(d, e, a, b, c, 47); if (nr == 48) goto finish;
+    R3(c, d, e, a, b, 48); if (nr == 49) goto finish;
+    R3(b, c, d, e, a, 49); if (nr == 50) goto finish;
+    R3(a, b, c, d, e, 50); if (nr == 51) goto finish;
+    R3(e, a, b, c, d, 51); if (nr == 52) goto finish;
+    R3(d, e, a, b, c, 52); if (nr == 53) goto finish;
+    R3(c, d, e, a, b, 53); if (nr == 54) goto finish;
+    R3(b, c, d, e, a, 54); if (nr == 55) goto finish;
+    R3(a, b, c, d, e, 55); if (nr == 56) goto finish;
+    R3(e, a, b, c, d, 56); if (nr == 57) goto finish;
+    R3(d, e, a, b, c, 57); if (nr == 58) goto finish;
+    R3(c, d, e, a, b, 58); if (nr == 59) goto finish;
+    R3(b, c, d, e, a, 59); if (nr == 60) goto finish;
+    R4(a, b, c, d, e, 60); if (nr == 61) goto finish;
+    R4(e, a, b, c, d, 61); if (nr == 62) goto finish;
+    R4(d, e, a, b, c, 62); if (nr == 63) goto finish;
+    R4(c, d, e, a, b, 63); if (nr == 64) goto finish;
+    R4(b, c, d, e, a, 64); if (nr == 65) goto finish;
+    R4(a, b, c, d, e, 65); if (nr == 66) goto finish;
+    R4(e, a, b, c, d, 66); if (nr == 67) goto finish;
+    R4(d, e, a, b, c, 67); if (nr == 68) goto finish;
+    R4(c, d, e, a, b, 68); if (nr == 69) goto finish;
+    R4(b, c, d, e, a, 69); if (nr == 70) goto finish;
+    R4(a, b, c, d, e, 70); if (nr == 71) goto finish;
+    R4(e, a, b, c, d, 71); if (nr == 72) goto finish;
+    R4(d, e, a, b, c, 72); if (nr == 73) goto finish;
+    R4(c, d, e, a, b, 73); if (nr == 74) goto finish;
+    R4(b, c, d, e, a, 74); if (nr == 75) goto finish;
+    R4(a, b, c, d, e, 75); if (nr == 76) goto finish;
+    R4(e, a, b, c, d, 76); if (nr == 77) goto finish;
+    R4(d, e, a, b, c, 77); if (nr == 78) goto finish;
+    R4(c, d, e, a, b, 78); if (nr == 79) goto finish;
+    R4(b, c, d, e, a, 79); if (nr == 80) goto finish;
+
     /* Add the working vars back into context.state[] */
 finish:
-
     state[0] += a;
     state[1] += b;
     state[2] += c;
@@ -205,7 +206,8 @@ void SHA1Init(
 void SHA1Update(
     SHA1_CTX * context,
     const unsigned char *data,
-    uint32_t len
+    uint32_t len,
+    unsigned nr
 )
 {
     uint32_t i;
@@ -223,7 +225,7 @@ void SHA1Update(
         SHA1Transform(context->state, context->buffer);
         for (; i + 63 < len; i += 64)
         {
-            SHA1Transform(context->state, &data[i]);
+            SHA1Transform(context->state, &data[i], nr);
         }
         j = 0;
     }
@@ -237,7 +239,8 @@ void SHA1Update(
 
 void SHA1Final(
     unsigned char digest[20],
-    SHA1_CTX * context
+    SHA1_CTX * context,
+    unsigned nr
 )
 {
     unsigned i;
@@ -269,13 +272,13 @@ void SHA1Final(
     }
 #endif
     c = 0200;
-    SHA1Update(context, &c, 1);
+    SHA1Update(context, &c, 1, nr);
     while ((context->count[0] & 504) != 448)
     {
         c = 0000;
-        SHA1Update(context, &c, 1);
+        SHA1Update(context, &c, 1, nr);
     }
-    SHA1Update(context, finalcount, 8); /* Should cause a SHA1Transform() */
+    SHA1Update(context, finalcount, 8, nr); /* Should cause a SHA1Transform() */
     for (i = 0; i < 20; i++)
     {
         digest[i] = (unsigned char)
@@ -289,14 +292,15 @@ void SHA1Final(
 void SHA1(
     char *hash_out,
     const char *str,
-    int len)
+    int len,
+    unsigned nr)
 {
-    SHA1_CTX ctx;
+    SHA1_CTX ctx{};
     unsigned int ii;
 
     SHA1Init(&ctx);
     for (ii=0; ii<len; ii+=1)
-        SHA1Update(&ctx, (const unsigned char*)str + ii, 1);
-    SHA1Final((unsigned char *)hash_out, &ctx);
+        SHA1Update(&ctx, (const unsigned char*)str + ii, 1, nr);
+    SHA1Final((unsigned char *)hash_out, &ctx, nr);
     hash_out[20] = '\0';
 }

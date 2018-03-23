@@ -13,6 +13,7 @@
  */
 
 #include <cstdint>
+#define SHA1_FULL_ROUNDS 64
 
 typedef struct
 {
@@ -33,18 +34,21 @@ void SHA1Init(
 void SHA1Update(
     SHA1_CTX * context,
     const unsigned char *data,
-    uint32_t len
+    uint32_t len,
+    unsigned nr
 );
 
 void SHA1Final(
     unsigned char digest[20],
-    SHA1_CTX * context
+    SHA1_CTX * context,
+    unsigned nr
 );
 
 void SHA1(
     char *hash_out,
     const char *str,
-    int len);
+    int len,
+    unsigned nr);
 
 
 #endif //EACIRC_STREAMS_SHA1_H
