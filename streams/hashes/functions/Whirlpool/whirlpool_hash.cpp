@@ -15,8 +15,8 @@ namespace hash {
     }
 
     int Whirlpool::Init(int hashbitlen) {
-        if (hashbitlen != 256) {
-            throw std::out_of_range("Whirlpool supports only 256 bit output");
+        if (hashbitlen != 8*whirlpool_block_size) {
+            throw std::out_of_range("Whirlpool supports only 512 bit output");
         }
 
         rhash_whirlpool_init(&(this->m_state));
