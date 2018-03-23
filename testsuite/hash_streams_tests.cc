@@ -30,3 +30,7 @@ TEST(sha256, test_vectors) {
 TEST(md5, test_vectors) {
     testsuite::hash_test_case("MD5", 64)();
 }
+
+TEST(whirlpool, test_vectors) {
+    testsuite::hash_test_case("Whirlpool", 10)();
+}
