@@ -10,7 +10,7 @@ namespace hash {
 
 MD5::MD5(const int numRounds) {
     if (numRounds <= 0 || numRounds > MD5_FULL_ROUNDS){
-        throw std::out_of_range("Valid numRounds range for Keccak is <1-24>");
+        throw std::out_of_range("Valid numRounds range for MD5 is <1-64>");
     }
 
     this->m_rounds = (unsigned)numRounds;
