@@ -29,8 +29,8 @@ namespace hash {
     }
 
     int SHA1::Init(int hashbitlen) {
-        if (hashbitlen != 256) {
-            throw std::out_of_range("SHA256 supports only 256 bit output");
+        if (hashbitlen != 160) {
+            throw std::out_of_range("SHA1 supports only 160 bit output");
         }
 
         SHA1Init(&(this->m_state));
