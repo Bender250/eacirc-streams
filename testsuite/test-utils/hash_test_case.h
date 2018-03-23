@@ -1,8 +1,8 @@
 #ifndef EACIRC_STREAMS_HASH_TEST_CASE_H
 #define EACIRC_STREAMS_HASH_TEST_CASE_H
 
-#include <streams/hashes/hash_interface.h>
-#include <streams/hashes/hash_factory.h>
+#include <streams/hash/hash_interface.h>
+#include <streams/hash/hash_factory.h>
 #include "test_case.h"
 
 namespace testsuite {

@@ -24,7 +24,7 @@
 #endif
 
 #ifdef BUILD_hash
-#include <streams/hashes/hash_stream.h>
+#include <streams/hash/hash_stream.h>
 #endif
 
 namespace _impl {

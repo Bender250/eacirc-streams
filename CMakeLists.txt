@@ -47,7 +47,7 @@ add_subdirectory(eacirc-core)
 add_subdirectory(streams/estream)
 add_subdirectory(streams/sha3)
 add_subdirectory(streams/block)
-add_subdirectory(streams/hashes)
+add_subdirectory(streams/hash)
 
 ## Executables
 

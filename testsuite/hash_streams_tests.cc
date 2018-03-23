@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <eacirc-core/json.h>
-#include <streams/hashes/hash_factory.h>
-#include <streams/hashes/hash_interface.h>
+#include <streams/hash/hash_factory.h>
+#include <streams/hash/hash_interface.h>
 #include <fstream>
 #include "stream.h"
 #include "streams.h"
