@@ -1,5 +1,7 @@
 // https://github.com/rhash/RHash/blob/master/librhash/gost.h
 /* gost.h */
+// https://tools.ietf.org/html/rfc5831
+// https://tools.ietf.org/html/rfc6986
 // GOST("The quick brown fox jumps over the lazy dog") = 77b7fa410c9ac58a25f49bca7d0468c9296529315eaca76bd1a10f376d1f4294
 // GOST("") = ce85b99cc46752fffee35cab9a7b0278abb4c2d2055cff685af4912c49490f8d
 // GOST("a") = d42c539e367c66e9c88a801f6649349c21871b4344c6a573f849fdce62f314dd

@@ -16,7 +16,7 @@ namespace hash {
 
     int Gost::Init(int hashbitlen) {
         if (hashbitlen != gost_hash_length*8) {
-            throw std::out_of_range("Gost supports only 160 bit output");
+            throw std::out_of_range("Gost supports only 256 bit output");
         }
 
         rhash_gost_init(&(this->m_state));
