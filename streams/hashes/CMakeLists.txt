@@ -4,6 +4,7 @@ add_library(hash STATIC EXCLUDE_FROM_ALL
     hash_interface
     functions/hash_functions
 # === SHA-3 hash function files ===
+    functions/Gost/gost
     functions/MD5/md5
     functions/MD5/md5_hash
     functions/SHA1/sha1
